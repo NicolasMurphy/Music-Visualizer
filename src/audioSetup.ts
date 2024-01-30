@@ -1,15 +1,16 @@
 import { camera } from './sceneSetup.js';
+import { AudioListener, Audio, AudioLoader, AudioAnalyser} from 'three';
 
 let started = false;
 let sound, analyser;
 
 function initializeAudio(onAudioReady) {
-    const listener = new THREE.AudioListener();
+    const listener = new AudioListener();
     camera.add(listener);
-    sound = new THREE.Audio(listener);
-    const audioLoader = new THREE.AudioLoader();
+    sound = new Audio(listener);
+    const audioLoader = new AudioLoader();
 
-    audioLoader.load('cadet(pinballMix).wav', function(buffer) {
+    audioLoader.load('/cadet(pinballMix).wav', function(buffer) {
         sound.setBuffer(buffer);
         sound.setLoop(true);
         sound.setVolume(0.5);
@@ -19,7 +20,7 @@ function initializeAudio(onAudioReady) {
         }
     });
 
-    analyser = new THREE.AudioAnalyser(sound, 4096);
+    analyser = new AudioAnalyser(sound, 4096);
 }
 
 function startAudio() {
