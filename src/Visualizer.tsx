@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import * as THREE from "three";
 import { scene, camera, renderer, appendRendererToDOM } from './sceneSetup';
 import { analyser, started } from "./audioSetup";
