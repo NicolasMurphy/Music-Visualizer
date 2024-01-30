@@ -61,7 +61,7 @@ const Visualizer = () => {
       const midFreqEnd = Math.floor(frequencyData.length * 0.8);
       const midFreqRange = midFreqEnd - midFreqStart; // 5% to 80%
 
-      cubesRef.current.forEach((cube, i) => {
+      cubesRef.current.forEach((cube) => {
         let index;
         const positionX = cube.position.x + (gridSize / 2) * spacing;
 

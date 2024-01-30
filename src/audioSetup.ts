@@ -2,9 +2,9 @@ import { camera } from './sceneSetup.js';
 import { AudioListener, Audio, AudioLoader, AudioAnalyser} from 'three';
 
 let started = false;
-let sound, analyser;
+let sound: HTMLAudioElement , analyser: AnalyserNode;
 
-function initializeAudio(onAudioReady) {
+function initializeAudio(onAudioReady: () => void) {
     const listener = new AudioListener();
     camera.add(listener);
     sound = new Audio(listener);
