@@ -4,7 +4,7 @@ import { AudioListener, Audio, AudioLoader} from 'three';
 
 // let started = false;
 // let sound: Audio , analyser: AudioAnalyser;
-let sound: Audio;
+let sound: Audio | null = null;
 
 const startAudioDirectly = () => {
     // if (!started) {
