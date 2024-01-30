@@ -9,7 +9,7 @@ const Play = () => {
   const loadSong = () => {
     initializeAudio(() => {
       setIsSongLoaded(true);
-      setIsAudioReady(true); // Assuming the song is ready to play immediately after loading
+      setIsAudioReady(true);
     });
   };
 

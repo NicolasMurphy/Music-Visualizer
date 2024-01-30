@@ -12,7 +12,7 @@ function initializeAudio(onAudioReady: () => void) {
     sound = new Audio(listener);
     const audioLoader = new AudioLoader();
 
-    audioLoader.load('/cadet(pinballMix).wav', function(buffer) {
+    audioLoader.load('/cadet(pinballMix).mp3', function(buffer) {
 
         sound.setBuffer(buffer);
         sound.setLoop(true);
