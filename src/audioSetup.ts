@@ -16,10 +16,10 @@ const startAudioDirectly = () => {
 
             const audioLoader = new AudioLoader();
             audioLoader.load('/cadet(pinballMix).mp3', function(buffer) {
-                sound.setBuffer(buffer);
-                sound.setLoop(true);
-                sound.setVolume(0.5);
-                sound.play();
+                sound?.setBuffer(buffer);
+                sound?.setLoop(true);
+                sound?.setVolume(0.5);
+                sound?.play();
                 // started = true;
 
                 // analyser = new AudioAnalyser(sound, 4096);
