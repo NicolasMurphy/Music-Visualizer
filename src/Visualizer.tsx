@@ -25,7 +25,7 @@ const Visualizer = () => {
       cubesRef.current.forEach(cube => scene.remove(cube));
       cubesRef.current = [];
     };
-  }, []);
+  });
 
   const createCubes = () => {
     for (let x = 0; x < gridSize; x++) {
