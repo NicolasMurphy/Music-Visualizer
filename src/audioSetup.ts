@@ -1,11 +1,13 @@
 import { camera } from './sceneSetup.js';
-import { AudioListener, Audio, AudioLoader, AudioAnalyser} from 'three';
+import { AudioListener, Audio, AudioLoader} from 'three';
+// import { AudioListener, Audio, AudioLoader, AudioAnalyser} from 'three';
 
-let started = false;
-let sound: Audio , analyser: AudioAnalyser;
+// let started = false;
+// let sound: Audio , analyser: AudioAnalyser;
+let sound: Audio;
 
 const startAudioDirectly = () => {
-    if (!started) {
+    // if (!started) {
         if (!sound) {
             const listener = new AudioListener();
             camera.add(listener);
@@ -18,17 +20,18 @@ const startAudioDirectly = () => {
                 sound.setLoop(true);
                 sound.setVolume(0.5);
                 sound.play();
-                started = true;
+                // started = true;
 
-                analyser = new AudioAnalyser(sound, 4096);
+                // analyser = new AudioAnalyser(sound, 4096);
             }, undefined, function(err) {
                 console.error('Error loading audio:', err);
             });
         } else {
             sound.play();
-            started = true;
+            // started = true;
         }
     }
-};
+// };
 
-export { startAudioDirectly, analyser, started };
+// export { startAudioDirectly, analyser, started };
+export { startAudioDirectly };
