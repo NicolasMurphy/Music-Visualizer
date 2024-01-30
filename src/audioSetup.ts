@@ -4,32 +4,20 @@ import { AudioListener, Audio, AudioLoader, AudioAnalyser} from 'three';
 let started = false;
 let sound: Audio , analyser: AudioAnalyser;
 
-function initializeAudio(onAudioReady: () => void) {
-
-    const listener = new AudioListener();
-    camera.add(listener);
-
-    sound = new Audio(listener);
-    const audioLoader = new AudioLoader();
-
-    audioLoader.load('/cadet(pinballMix).mp3', function(buffer) {
-
-        sound.setBuffer(buffer);
-        sound.setLoop(true);
-        sound.setVolume(0.5);
-
-        analyser = new AudioAnalyser(sound, 4096);
-
-        if (typeof onAudioReady === 'function') {
-            onAudioReady();
-        }
-    });
-}
-
-function startAudio() {
+const startAudioDirectly = () => {
     if (!started) {
-        if (sound.context.state === 'suspended') {
-            sound.context.resume().then(() => {
+        if (!sound) {
+            const listener = new AudioListener();
+            camera.add(listener);
+            sound = new Audio(listener);
+            const audioLoader = new AudioLoader();
+
+            audioLoader.load('/cadet(pinballMix).mp3', function(buffer) {
+                sound.setBuffer(buffer);
+                sound.setLoop(true);
+                sound.setVolume(0.5);
+                analyser = new AudioAnalyser(sound, 4096);
+
                 sound.play();
                 started = true;
             });
@@ -38,7 +26,6 @@ function startAudio() {
             started = true;
         }
     }
-}
+};
 
-
-export { initializeAudio, startAudio, analyser, started };
+export { startAudioDirectly, analyser, started };
