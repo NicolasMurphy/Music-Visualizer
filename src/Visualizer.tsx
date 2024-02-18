@@ -1,7 +1,11 @@
 import { useEffect, useRef } from "react";
 import * as THREE from "three";
-import { scene, camera, renderer, appendRendererToDOM } from './sceneSetup';
-import { analyser, started } from "./audioSetup";
+import { scene, camera, renderer, appendRendererToDOM } from "./sceneSetup";
+import {
+  initializeMicrophoneInput,
+  getAnalyserNode,
+  audioContext,
+} from "./microphoneInput";
 
 const gridSize = 10;
 const cubeSize = 0.5;
@@ -10,22 +14,50 @@ const spacing = 1.2;
 const Visualizer = () => {
   const cubesRef = useRef<THREE.Mesh[]>([]);
   const requestIdRef = useRef<number>();
+  const analyserRef = useRef<AnalyserNode>();
 
   useEffect(() => {
-    appendRendererToDOM('visualizer');
+    const setupMicrophone = async () => {
+      await initializeMicrophoneInput();
+      analyserRef.current = getAnalyserNode();
+      animate();
+    };
+
+    // Set renderer size to full screen
+    renderer.setSize(window.innerWidth, window.innerHeight);
+
+    appendRendererToDOM("visualizer");
     createCubes();
-    animate();
+    setupMicrophone();
+
+    // Resume AudioContext on user interaction
+    const resumeAudioContext = () => {
+      if (audioContext.state === "suspended") {
+        audioContext.resume();
+      }
+    };
+    document.addEventListener("click", resumeAudioContext);
+
+    // Handle window resize
+    const onWindowResize = () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    };
+    window.addEventListener("resize", onWindowResize);
 
     return () => {
       cancelAnimationFrame(requestIdRef.current!);
-      const element = document.getElementById('visualizer');
+      window.removeEventListener("resize", onWindowResize);
+      document.removeEventListener("click", resumeAudioContext);
+      const element = document.getElementById("visualizer");
       if (element && element.contains(renderer.domElement)) {
         element.removeChild(renderer.domElement);
       }
-      cubesRef.current.forEach(cube => scene.remove(cube));
+      cubesRef.current.forEach((cube) => scene.remove(cube));
       cubesRef.current = [];
     };
-  });
+  }, []);
 
   const createCubes = () => {
     for (let x = 0; x < gridSize; x++) {
@@ -33,12 +65,14 @@ const Visualizer = () => {
         for (let z = 0; z < gridSize; z++) {
           const geometry = new THREE.BoxGeometry(cubeSize, cubeSize, cubeSize);
           const material = new THREE.MeshBasicMaterial({
-            color: new THREE.Color(`hsl(${((gridSize - x - 1) / gridSize) * 360}, 100%, 50%)`),
+            color: new THREE.Color(
+              `hsl(${((gridSize - x - 1) / gridSize) * 360}, 100%, 50%)`
+            ),
           });
           const cube = new THREE.Mesh(geometry, material);
 
           cube.position.set(
-            ((gridSize - x - 1) - gridSize / 2) * spacing,
+            (gridSize - x - 1 - gridSize / 2) * spacing,
             (y - gridSize / 2) * spacing,
             (z - gridSize / 2) * spacing
           );
@@ -53,8 +87,11 @@ const Visualizer = () => {
   const animate = () => {
     requestIdRef.current = requestAnimationFrame(animate);
 
-    if (started && analyser) {
-      const frequencyData = analyser.getFrequencyData();
+    if (analyserRef.current) {
+      const frequencyData = new Uint8Array(
+        analyserRef.current.frequencyBinCount
+      );
+      analyserRef.current.getByteFrequencyData(frequencyData);
 
       const lowFreqRange = Math.floor(frequencyData.length * 0.01); // 1% for the first row
       const midFreqStart = Math.floor(frequencyData.length * 0.05);
@@ -68,7 +105,8 @@ const Visualizer = () => {
         if (positionX < spacing) {
           index = Math.floor((positionX / spacing) * lowFreqRange);
         } else {
-          const normalizedPosition = (positionX - spacing) / ((gridSize - 1) * spacing);
+          const normalizedPosition =
+            (positionX - spacing) / ((gridSize - 1) * spacing);
           index = midFreqStart + Math.floor(normalizedPosition * midFreqRange);
         }
 
@@ -91,7 +129,12 @@ const Visualizer = () => {
     renderer.render(scene, camera);
   };
 
-  return <div id="visualizer"></div>;
+  return (
+    <div
+      id="visualizer"
+      style={{ width: "100%", height: "100%", overflow: "hidden" }}
+    ></div>
+  );
 };
 
 export default Visualizer;
