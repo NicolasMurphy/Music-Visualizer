@@ -93,24 +93,17 @@ const Visualizer = () => {
       );
       analyserRef.current.getByteFrequencyData(frequencyData);
 
-      // const lowFreqRange = Math.floor(frequencyData.length * 0.1); // 10% for the first row
-      const lowFreqStart = Math.floor(frequencyData.length * 0.05);
-      const lowFreqEnd = Math.floor(frequencyData.length * 0.1);
-      const lowFreqRange = lowFreqEnd - lowFreqStart; // 5% to 10%
-
-      const midFreqStart = Math.floor(frequencyData.length * 0.1);
+      const lowFreqRange = Math.floor(frequencyData.length * 0.01); // 1% for the first row
+      const midFreqStart = Math.floor(frequencyData.length * 0.05);
       const midFreqEnd = Math.floor(frequencyData.length * 0.8);
-      const midFreqRange = midFreqEnd - midFreqStart; // 10% to 80%
+      const midFreqRange = midFreqEnd - midFreqStart; // 5% to 80%
 
       cubesRef.current.forEach((cube) => {
         let index;
         const positionX = cube.position.x + (gridSize / 2) * spacing;
 
         if (positionX < spacing) {
-          const normalizedPosition =
-            (positionX - spacing) / ((gridSize - 1) * spacing);
-          // index = Math.floor((positionX / spacing) * lowFreqRange);
-          index = lowFreqStart + Math.floor(normalizedPosition * lowFreqRange);
+          index = Math.floor((positionX / spacing) * lowFreqRange);
         } else {
           const normalizedPosition =
             (positionX - spacing) / ((gridSize - 1) * spacing);
