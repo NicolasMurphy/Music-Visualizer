@@ -6,12 +6,10 @@ import {
   getAnalyserNode,
   audioContext,
 } from "./microphoneInput";
-import { TextureLoader } from 'three';
-import {getCircle, crazyNum} from './getCircle';
-const gridSize = 10;
-const cubeSize = 1.5;
-const spacing = 20;
 
+const gridSize = 10;
+const cubeSize = 0.5;
+const spacing = 10;
 
 const Visualizer = () => {
   const cubesRef = useRef<THREE.Mesh[]>([]);
@@ -61,27 +59,17 @@ const Visualizer = () => {
     };
   }, []);
 
-  let bigOrSmall = Math.sin(Date.now()) > .2 ? 2 : 16;
-  let bigOrSmall2 = (bigOrSmall - 2) * 2;
   const createCubes = () => {
-  // const textureLoader = new THREE.TextureLoader();
-  // const texture = textureLoader.load('dj-pepe.gif');
     for (let x = 0; x < gridSize; x++) {
       for (let y = 0; y < gridSize; y++) {
         for (let z = 0; z < gridSize; z++) {
-          let val =  (Math.sin(Date.now()) * 16);
-          let val2 = getCircle(z,)
-
-          const geometry = new THREE.TorusKnotGeometry(10,1,64,8,2,3);
-          // const geometry = new THREE.BoxGeometry(cubeSize, cubeSize, cubeSize);
-          // const geometry = new THREE.TorusGeometry(2, 3, 3, 2, 5);
+          const geometry = new THREE.TorusKnotGeometry(10,1,64,8,1,2);
           const material = new THREE.MeshBasicMaterial({
             color: new THREE.Color(
-              `hsl(${((gridSize - x - 1) / gridSize) * 720}, 100%, 50%)`
+              `hsl(${((gridSize - x - 1) / gridSize) * 360}, 100%, 50%)`
             ),
           });
-          // const material = new THREE.MeshBasicMaterial({ map: texture });
-              const cube = new THREE.Mesh(geometry, material);
+          const cube = new THREE.Mesh(geometry, material);
 
           cube.position.set(
             (gridSize - x - 1 - gridSize / 2) * spacing,
@@ -105,17 +93,24 @@ const Visualizer = () => {
       );
       analyserRef.current.getByteFrequencyData(frequencyData);
 
-      const lowFreqRange = Math.floor(frequencyData.length * 0.01); // 1% for the first row
-      const midFreqStart = Math.floor(frequencyData.length * 0.05);
+      // const lowFreqRange = Math.floor(frequencyData.length * 0.1); // 10% for the first row
+      const lowFreqStart = Math.floor(frequencyData.length * 0.05);
+      const lowFreqEnd = Math.floor(frequencyData.length * 0.1);
+      const lowFreqRange = lowFreqEnd - lowFreqStart; // 5% to 10%
+
+      const midFreqStart = Math.floor(frequencyData.length * 0.1);
       const midFreqEnd = Math.floor(frequencyData.length * 0.8);
-      const midFreqRange = midFreqEnd - midFreqStart; // 5% to 80%
+      const midFreqRange = midFreqEnd - midFreqStart; // 10% to 80%
 
       cubesRef.current.forEach((cube) => {
         let index;
         const positionX = cube.position.x + (gridSize / 2) * spacing;
 
         if (positionX < spacing) {
-          index = Math.floor((positionX / spacing) * lowFreqRange);
+          const normalizedPosition =
+            (positionX - spacing) / ((gridSize - 1) * spacing);
+          // index = Math.floor((positionX / spacing) * lowFreqRange);
+          index = lowFreqStart + Math.floor(normalizedPosition * lowFreqRange);
         } else {
           const normalizedPosition =
             (positionX - spacing) / ((gridSize - 1) * spacing);
@@ -130,11 +125,10 @@ const Visualizer = () => {
       });
 
       scene.rotation.x += 0.001;
-      scene.rotation.y += 0.009;
-      scene.rotation.z += 0.003;
+      scene.rotation.y += 0.001;
 
-      const time = Date.now() * 0.001;
-      camera.position.z = 320 + Math.sin(time) * 15;
+      const time = Date.now() * 0.0001;
+      camera.position.z = 80 + Math.sin(time) * 15;
       camera.lookAt(scene.position);
     }
 
