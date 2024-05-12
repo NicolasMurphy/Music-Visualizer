@@ -9,7 +9,7 @@ import {
 import { TextureLoader } from 'three';
 import {getCircle, crazyNum} from './getCircle';
 const gridSize = 10;
-const cubeSize = 0.6;
+const cubeSize = 1.5;
 const spacing = 20;
 
 
@@ -61,8 +61,8 @@ const Visualizer = () => {
     };
   }, []);
 
-  let bigOrSmall = Math.sin(Date.now()) > .8 ? 2 : 16;
-
+  let bigOrSmall = Math.sin(Date.now()) > .2 ? 2 : 16;
+  let bigOrSmall2 = (bigOrSmall - 2) * 2;
   const createCubes = () => {
   // const textureLoader = new THREE.TextureLoader();
   // const texture = textureLoader.load('dj-pepe.gif');
@@ -72,7 +72,7 @@ const Visualizer = () => {
           let val =  (Math.sin(Date.now()) * 16);
           let val2 = getCircle(z,)
 
-          const geometry = new THREE.TorusKnotGeometry(7.391, 3.0591 * val + (Math.sin(Date.now()) * 64), (Math.sin(Date.now()) * 64) + 64, bigOrSmall, 5, 6);
+          const geometry = new THREE.TorusKnotGeometry(10,1,64,8,2,3);
           // const geometry = new THREE.BoxGeometry(cubeSize, cubeSize, cubeSize);
           // const geometry = new THREE.TorusGeometry(2, 3, 3, 2, 5);
           const material = new THREE.MeshBasicMaterial({
@@ -141,7 +141,7 @@ const Visualizer = () => {
       scene.rotation.z += 0.003;
 
       const time = Date.now() * 0.001;
-      camera.position.z = 160 + Math.sin(time) * 15;
+      camera.position.z = 320 + Math.sin(time) * 15;
       camera.lookAt(scene.position);
     }
 
