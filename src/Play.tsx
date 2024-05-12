@@ -33,7 +33,8 @@ import React from 'react';
 import Visualizer from './Visualizer';
 
 const Play: React.FC = () => {
-  const [isMicEnabled, setIsMicEnabled] = React.useState(false);
+  // const [isMicEnabled, setIsMicEnabled] = React.useState(false);
+  const [isMicEnabled, setIsMicEnabled] = React.useState(true);
 
   const handleEnableMic = () => {
     setIsMicEnabled(true);

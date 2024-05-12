@@ -6,10 +6,12 @@ import {
   getAnalyserNode,
   audioContext,
 } from "./microphoneInput";
-
+import { TextureLoader } from 'three';
+import {getCircle, crazyNum} from './getCircle';
 const gridSize = 10;
-const cubeSize = 0.5;
-const spacing = 1.2;
+const cubeSize = 0.6;
+const spacing = 20;
+
 
 const Visualizer = () => {
   const cubesRef = useRef<THREE.Mesh[]>([]);
@@ -59,17 +61,27 @@ const Visualizer = () => {
     };
   }, []);
 
+  let bigOrSmall = Math.sin(Date.now()) > .8 ? 2 : 16;
+
   const createCubes = () => {
+  // const textureLoader = new THREE.TextureLoader();
+  // const texture = textureLoader.load('dj-pepe.gif');
     for (let x = 0; x < gridSize; x++) {
       for (let y = 0; y < gridSize; y++) {
         for (let z = 0; z < gridSize; z++) {
-          const geometry = new THREE.BoxGeometry(cubeSize, cubeSize, cubeSize);
+          let val =  (Math.sin(Date.now()) * 16);
+          let val2 = getCircle(z,)
+
+          const geometry = new THREE.TorusKnotGeometry(7.391, 3.0591 * val + (Math.sin(Date.now()) * 64), (Math.sin(Date.now()) * 64) + 64, bigOrSmall, 5, 6);
+          // const geometry = new THREE.BoxGeometry(cubeSize, cubeSize, cubeSize);
+          // const geometry = new THREE.TorusGeometry(2, 3, 3, 2, 5);
           const material = new THREE.MeshBasicMaterial({
             color: new THREE.Color(
-              `hsl(${((gridSize - x - 1) / gridSize) * 360}, 100%, 50%)`
+              `hsl(${((gridSize - x - 1) / gridSize) * 720}, 100%, 50%)`
             ),
           });
-          const cube = new THREE.Mesh(geometry, material);
+          // const material = new THREE.MeshBasicMaterial({ map: texture });
+              const cube = new THREE.Mesh(geometry, material);
 
           cube.position.set(
             (gridSize - x - 1 - gridSize / 2) * spacing,
@@ -125,10 +137,11 @@ const Visualizer = () => {
       });
 
       scene.rotation.x += 0.001;
-      scene.rotation.y += 0.001;
+      scene.rotation.y += 0.009;
+      scene.rotation.z += 0.003;
 
-      const time = Date.now() * 0.0001;
-      camera.position.z = 20 + Math.sin(time) * 15;
+      const time = Date.now() * 0.001;
+      camera.position.z = 160 + Math.sin(time) * 15;
       camera.lookAt(scene.position);
     }
 
