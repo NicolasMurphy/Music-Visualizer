@@ -9,7 +9,7 @@ import {
 
 const gridSize = 10;
 const cubeSize = 0.5;
-const spacing = 10;
+const spacing = 20;
 
 const Visualizer = () => {
   const cubesRef = useRef<THREE.Mesh[]>([]);
@@ -63,7 +63,7 @@ const Visualizer = () => {
     for (let x = 0; x < gridSize; x++) {
       for (let y = 0; y < gridSize; y++) {
         for (let z = 0; z < gridSize; z++) {
-          const geometry = new THREE.TorusKnotGeometry(10,1,64,8,1,2);
+          const geometry = new THREE.TorusKnotGeometry(500,1,64,8,2,1);
           const material = new THREE.MeshBasicMaterial({
             color: new THREE.Color(
               `hsl(${((gridSize - x - 1) / gridSize) * 360}, 100%, 50%)`
@@ -124,11 +124,12 @@ const Visualizer = () => {
         cube.scale.set(logScale, logScale, logScale);
       });
 
-      scene.rotation.x += 0.001;
-      scene.rotation.y += 0.001;
+      scene.rotation.x += 0.008;
+      scene.rotation.y += 0.006;
+      scene.rotation.z += 0.05;
 
       const time = Date.now() * 0.0001;
-      camera.position.z = 80 + Math.sin(time) * 15;
+      camera.position.z = 200 + Math.sin(time) * 15;
       camera.lookAt(scene.position);
     }
 
