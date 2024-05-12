@@ -7,9 +7,9 @@ import {
   audioContext,
 } from "./microphoneInput";
 
-const gridSize = 10;
+const gridSize = 4;
 const cubeSize = 0.5;
-const spacing = 2;
+const spacing = 4;
 
 const Visualizer = () => {
   const cubesRef = useRef<THREE.Mesh[]>([]);
@@ -63,8 +63,8 @@ const Visualizer = () => {
     for (let x = 0; x < gridSize; x++) {
       for (let y = 0; y < gridSize; y++) {
         for (let z = 0; z < gridSize; z++) {
-          const geometry = new THREE.TorusKnotGeometry(500,1,64,8,4,3);
-          // const geometry = new THREE.SphereGeometry(5,32,16);
+          const geometry = new THREE.TorusKnotGeometry(1000,5,3,8,10,1);
+          //const geometry = new THREE.SphereGeometry(25,32,16);
           const material = new THREE.MeshBasicMaterial({
             color: new THREE.Color(
               `hsl(${((gridSize - x - 1) / gridSize) * 360}, 100%, 50%)`
@@ -125,8 +125,9 @@ const Visualizer = () => {
         cube.scale.set(logScale, logScale, logScale);
       });
 
-      scene.rotation.x += 0.002;
-      scene.rotation.y += 0.01;
+      scene.rotation.x += 0.0001;
+      scene.rotation.y += 0.0003;
+      scene.rotation.y += 0.005;
 
       const time = Date.now() * 0.0001;
       camera.position.z = 1000 + Math.sin(time) * 15;
