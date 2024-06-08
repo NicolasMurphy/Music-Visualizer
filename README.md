@@ -1,2 +1,3 @@
 - A music visualizer using Three.js
-- Utilizes a microphone input to create audio reactive visuals
+- Utilizes microphone input to create audio reactive visuals
+- More coming soon!
