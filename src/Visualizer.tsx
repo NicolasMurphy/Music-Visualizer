@@ -8,7 +8,7 @@ import {
 } from "./microphoneInput";
 
 const initialGridSize = 3;
-const cubeSize = 0.5;
+// const cubeSize = 0.5;
 const spacing = 20;
 
 const Visualizer = () => {
