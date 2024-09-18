@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import { scene, camera, renderer, appendRendererToDOM } from "./sceneSetup";
 import {
@@ -7,11 +7,12 @@ import {
   audioContext,
 } from "./microphoneInput";
 
-const gridSize = 7;
+const initialGridSize = 10;
 // const cubeSize = 0.5;
-const spacing = 80;
+const spacing = 30;
 
 const Visualizer = () => {
+  const [gridSize, setGridSize] = useState(initialGridSize);
   const cubesRef = useRef<THREE.Mesh[]>([]);
   const requestIdRef = useRef<number>();
   const analyserRef = useRef<AnalyserNode>();
@@ -27,7 +28,7 @@ const Visualizer = () => {
     renderer.setSize(window.innerWidth, window.innerHeight);
 
     appendRendererToDOM("visualizer");
-    createCubes();
+    createCubes(gridSize);
     setupMicrophone();
 
     // Resume AudioContext on user interaction
@@ -46,10 +47,21 @@ const Visualizer = () => {
     };
     window.addEventListener("resize", onWindowResize);
 
+    // Handle keyboard input
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "ArrowUp") {
+        setGridSize((prev) => Math.min(prev + 1, 10)); // Max gridSize of 10
+      } else if (event.key === "ArrowDown") {
+        setGridSize((prev) => Math.max(prev - 1, 1)); // Min gridSize of 1
+      }
+    };
+    window.addEventListener("keydown", handleKeyDown);
+
     return () => {
       cancelAnimationFrame(requestIdRef.current!);
       window.removeEventListener("resize", onWindowResize);
       document.removeEventListener("click", resumeAudioContext);
+      window.removeEventListener("keydown", handleKeyDown);
       const element = document.getElementById("visualizer");
       if (element && element.contains(renderer.domElement)) {
         element.removeChild(renderer.domElement);
@@ -59,15 +71,21 @@ const Visualizer = () => {
     };
   }, []);
 
-  const createCubes = () => {
+  useEffect(() => {
+    // Update cubes when gridSize changes
+    cubesRef.current.forEach((cube) => scene.remove(cube));
+    cubesRef.current = [];
+    createCubes(gridSize);
+  }, [gridSize]);
+
+  const createCubes = (gridSize: number) => {
     for (let x = 0; x < gridSize; x++) {
       for (let y = 0; y < gridSize; y++) {
         for (let z = 0; z < gridSize; z++) {
-          const geometry = new THREE.TorusKnotGeometry(500, 3, 128, 8, 2, 3);
-          //const geometry = new THREE.SphereGeometry(25,32,16);
+          const geometry = new THREE.TorusKnotGeometry(20, 2, 64, 20, 1, 2);
           const material = new THREE.MeshBasicMaterial({
             color: new THREE.Color(
-              `hsl(${((gridSize - x - 1) / gridSize) * 540}, 100%, 50%)`
+              `hsl(${((gridSize - x - 1) / gridSize) * 360}, 100%, 50%)`
             ),
           });
           const cube = new THREE.Mesh(geometry, material);
@@ -126,11 +144,11 @@ const Visualizer = () => {
       });
 
       scene.rotation.x += 0.004;
-      scene.rotation.y += 0.005;
-      scene.rotation.y += 0.008;
+      scene.rotation.y += 0.002;
+      scene.rotation.z += 0.001;
 
       const time = Date.now() * 0.0001;
-      camera.position.z = 500 + Math.sin(time) * 400;
+      camera.position.z = 150 + Math.sin(time) * 100;
       camera.lookAt(scene.position);
     }
 
