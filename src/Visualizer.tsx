@@ -1,43 +1,46 @@
 import { useEffect, useRef, useState } from "react";
 import * as THREE from "three";
 import { scene, camera, renderer, appendRendererToDOM } from "./sceneSetup";
-import {
-  initializeMicrophoneInput,
-  getAnalyserNode,
-  audioContext,
-} from "./microphoneInput";
+// import {
+//   initializeMicrophoneInput,
+//   getAnalyserNode,
+//   audioContext,
+// } from "./microphoneInput";
+
+import { analyser } from "./audioSetup";
 
 const initialGridSize = 10;
 // const cubeSize = 0.5;
-const spacing = 30;
+const spacing = 50;
 
 const Visualizer = () => {
   const [gridSize, setGridSize] = useState(initialGridSize);
   const cubesRef = useRef<THREE.Mesh[]>([]);
   const requestIdRef = useRef<number>();
-  const analyserRef = useRef<AnalyserNode>();
+  // const analyserRef = useRef<AnalyserNode>();
 
   useEffect(() => {
-    const setupMicrophone = async () => {
-      await initializeMicrophoneInput();
-      analyserRef.current = getAnalyserNode();
-      animate();
-    };
+    // const setupMicrophone = async () => {
+    //   await initializeMicrophoneInput();
+    //   analyserRef.current = getAnalyserNode();
+    //   animate();
+    // };
 
     // Set renderer size to full screen
     renderer.setSize(window.innerWidth, window.innerHeight);
 
     appendRendererToDOM("visualizer");
     createCubes(gridSize);
-    setupMicrophone();
+    // setupMicrophone();
+    animate();
 
     // Resume AudioContext on user interaction
-    const resumeAudioContext = () => {
-      if (audioContext.state === "suspended") {
-        audioContext.resume();
-      }
-    };
-    document.addEventListener("click", resumeAudioContext);
+    // const resumeAudioContext = () => {
+    //   if (audioContext.state === "suspended") {
+    //     audioContext.resume();
+    //   }
+    // };
+    // document.addEventListener("click", resumeAudioContext);
 
     // Handle window resize
     const onWindowResize = () => {
@@ -60,7 +63,7 @@ const Visualizer = () => {
     return () => {
       cancelAnimationFrame(requestIdRef.current!);
       window.removeEventListener("resize", onWindowResize);
-      document.removeEventListener("click", resumeAudioContext);
+      // document.removeEventListener("click", resumeAudioContext);
       window.removeEventListener("keydown", handleKeyDown);
       const element = document.getElementById("visualizer");
       if (element && element.contains(renderer.domElement)) {
@@ -106,11 +109,13 @@ const Visualizer = () => {
   const animate = () => {
     requestIdRef.current = requestAnimationFrame(animate);
 
-    if (analyserRef.current) {
-      const frequencyData = new Uint8Array(
-        analyserRef.current.frequencyBinCount
-      );
-      analyserRef.current.getByteFrequencyData(frequencyData);
+    // if (analyserRef.current) {
+    //   const frequencyData = new Uint8Array(
+    //     analyserRef.current.frequencyBinCount
+    //   );
+    //   analyserRef.current.getByteFrequencyData(frequencyData);
+    if (analyser) {
+      const frequencyData = analyser.getFrequencyData();
 
       // const lowFreqRange = Math.floor(frequencyData.length * 0.1); // 10% for the first row
       const lowFreqStart = Math.floor(frequencyData.length * 0.05);
