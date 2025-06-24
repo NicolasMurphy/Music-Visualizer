@@ -19,7 +19,8 @@ const Visualizer = () => {
   const requestIdRef = useRef<number>();
   // const analyserRef = useRef<AnalyserNode>();
 
-  useEffect(() => { // for mobile
+  useEffect(() => {
+    // for mobile
     setTimeout(() => {
       window.scrollTo(0, 1);
     }, 100);
@@ -168,10 +169,13 @@ const Visualizer = () => {
   };
 
   return (
-    <div
-      id="visualizer"
-      style={{ width: "100%", height: "100%", overflow: "hidden" }}
-    ></div>
+    <>
+      <div
+        id="visualizer"
+        style={{ width: "100%", height: "100%", overflow: "hidden" }}
+      ></div>
+      <div style={{ height: "120vh" }}></div> {/* Invisible scroll target */}
+    </>
   );
 };
 
