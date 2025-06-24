@@ -157,7 +157,7 @@ const Visualizer = () => {
       camera.lookAt(scene.position);
     }
 
-    renderer.setPixelRatio(window.devicePixelRatio);
+    renderer.setPixelRatio(window.devicePixelRatio * 3);
     renderer.render(scene, camera);
   };
 
