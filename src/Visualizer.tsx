@@ -19,11 +19,27 @@ const Visualizer = () => {
   const requestIdRef = useRef<number>();
   // const analyserRef = useRef<AnalyserNode>();
 
+  // for mobile
   useEffect(() => {
-    // for mobile
-    setTimeout(() => {
+    const scrollToHideUI = () => {
       window.scrollTo(0, 1);
-    }, 100);
+    };
+
+    // Try after load event
+    window.addEventListener("load", () => {
+      setTimeout(scrollToHideUI, 250);
+    });
+
+    // Try again on first touch
+    const onTouch = () => {
+      setTimeout(scrollToHideUI, 100);
+      window.removeEventListener("touchstart", onTouch);
+    };
+    window.addEventListener("touchstart", onTouch);
+
+    return () => {
+      window.removeEventListener("touchstart", onTouch);
+    };
   }, []);
 
   useEffect(() => {

@@ -71,12 +71,14 @@ h1 {
   color: white;
 }
 
-html, body {
+html,
+body {
   margin: 0;
   padding: 0;
-  height: 100%;
-  overflow: hidden;
+  min-height: 200vh; /* Ensure the page is scrollable */
   background: black;
+  overflow-x: hidden; /* Prevent sideways scroll */
+  -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
 }
 
 #visualizer {
@@ -85,4 +87,8 @@ html, body {
   position: fixed;
   top: 0;
   left: 0;
+}
+
+::-webkit-scrollbar {
+  display: none;
 }
