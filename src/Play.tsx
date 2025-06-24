@@ -1,6 +1,6 @@
-import { useState } from 'react';
-import { initializeAudio, startAudio } from './audioSetup';
-import Visualizer from './Visualizer';
+import { useState } from "react";
+import { initializeAudio, startAudio } from "./audioSetup";
+import Visualizer from "./Visualizer";
 
 const Play = () => {
   const [isSongLoaded, setIsSongLoaded] = useState(false);
@@ -15,8 +15,10 @@ const Play = () => {
   };
 
   const handleStart = () => {
-    startAudio();
-    setHasStarted(true); // Hide everything but visualizer
+    setHasStarted(true); // Mounts visualizer immediately
+    setTimeout(() => {
+      startAudio(); // Start audio after 1 second
+    }, 2000); // Delay in milliseconds
   };
 
   return (
@@ -28,7 +30,7 @@ const Play = () => {
           {isAudioReady && <button onClick={handleStart}>Play Music</button>}
         </>
       )}
-      {isAudioReady && <Visualizer />}
+      {hasStarted && <Visualizer />}
     </div>
   );
 };

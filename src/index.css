@@ -67,14 +67,22 @@ button:focus-visible {
   }
 } */
 
+h1 {
+  color: white;
+}
+
 html, body {
   margin: 0;
   padding: 0;
-  overflow: hidden; /* Prevent scrolling */
+  height: 100%;
+  overflow: hidden;
+  background: black;
 }
 
 #visualizer {
   width: 100vw;
   height: 100vh;
-  overflow: hidden; /* Ensure no internal scrolling */
+  position: fixed;
+  top: 0;
+  left: 0;
 }

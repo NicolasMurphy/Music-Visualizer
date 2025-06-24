@@ -19,6 +19,12 @@ const Visualizer = () => {
   const requestIdRef = useRef<number>();
   // const analyserRef = useRef<AnalyserNode>();
 
+  useEffect(() => { // for mobile
+    setTimeout(() => {
+      window.scrollTo(0, 1);
+    }, 100);
+  }, []);
+
   useEffect(() => {
     // const setupMicrophone = async () => {
     //   await initializeMicrophoneInput();
