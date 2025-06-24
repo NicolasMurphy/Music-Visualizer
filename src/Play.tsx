@@ -5,6 +5,7 @@ import Visualizer from './Visualizer';
 const Play = () => {
   const [isSongLoaded, setIsSongLoaded] = useState(false);
   const [isAudioReady, setIsAudioReady] = useState(false);
+  const [hasStarted, setHasStarted] = useState(false); // New flag
 
   const loadSong = () => {
     initializeAudio(() => {
@@ -13,16 +14,21 @@ const Play = () => {
     });
   };
 
+  const handleStart = () => {
+    startAudio();
+    setHasStarted(true); // Hide everything but visualizer
+  };
+
   return (
     <div>
-      <h1>Music Visualizer</h1>
-      {!isSongLoaded && <button onClick={loadSong}>Load Song</button>}
-      {isAudioReady && (
+      {!hasStarted && (
         <>
-          <button onClick={startAudio}>Play Music</button>
-          <Visualizer />
+          <h1>Music Visualizer</h1>
+          {!isSongLoaded && <button onClick={loadSong}>Load Song</button>}
+          {isAudioReady && <button onClick={handleStart}>Play Music</button>}
         </>
       )}
+      {isAudioReady && <Visualizer />}
     </div>
   );
 };
